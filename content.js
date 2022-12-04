@@ -129,22 +129,22 @@ function placeBoxes() {
 							t.parentLink.style.setProperty('text-decoration',t.og_textDecoration,'important')
 							t.style.cssText=cbCSS;
 						};
-								let inp=[...cl.getElementsByTagName('INPUT')].filter( (c) => {return c.type==='checkbox'});
-		for(let j=0, len_j=inp.length; j<len_j; j++){
-			let pj=inp[j];
-			pj.dispatchEvent(new Event('pointerleave'));
-			let ist=pj.style.cssText;
-			pj.dispatchEvent(new Event('pointerenter'));
-			if(pj.style.cssText===ist){
-				let s=pj.parentSct;
-				elRemover(pj);
-				if(!!s && typeof s!=='undefined'){
-					elRemover(s);
-				}
-			}else{
-				pj.dispatchEvent(new Event('pointerleave'));
-			}
-		}
+						let inp=[...cl.getElementsByTagName('INPUT')].filter( (c) => {return c.type==='checkbox'});
+						for(let j=0, len_j=inp.length; j<len_j; j++){
+							let pj=inp[j];
+							pj.dispatchEvent(new Event('pointerleave'));
+							let ist=pj.style.cssText;
+							pj.dispatchEvent(new Event('pointerenter'));
+							if(pj.style.cssText===ist){
+								let s=pj.parentSct;
+								elRemover(pj);
+								if(!!s && typeof s!=='undefined'){
+									elRemover(s);
+								}
+							}else{
+								pj.dispatchEvent(new Event('pointerleave'));
+							}
+						}
 						//Added box
 		}
 	}
