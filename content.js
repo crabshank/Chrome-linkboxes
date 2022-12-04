@@ -1,3 +1,6 @@
+var firstDone=false;
+function start_up(){
+try{
 var lkboxes={bx:[]};
 var cbCSS="margin-left: 0.17em !important;margin-right: 0.17em !important;outline-color: black !important;outline-width: 1px !important;outline-style: inset !important;outline-offset: -1px !important;";
 var cbCSS_u="box-shadow: #167ac6 0em 0em 5px 2px !important;";
@@ -246,3 +249,15 @@ observer.observe(document, {
 		
 }
 placeBoxes();
+}catch(e){;}
+}
+
+function gotMessage(message, sender, sendResponse) {
+    let m=message.message;
+        if(m==="Scan!" && !firstDone){
+			firstDone=true;
+            start_up();
+		}
+}
+
+chrome.runtime.onMessage.addListener(gotMessage);
