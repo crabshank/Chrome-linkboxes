@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Linkboxes",
+  "version": "2022.12",
+  "content_scripts": [
+    {
+	      "all_frames": true,
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "permissions": ["tabs"],
+  "action": {
+    "default_icon": "linkbox.png",
+    "default_title": "Linkboxes"
+  },
+  	"icons": {
+        "128": "linkbox.png"
+    }
+}
