@@ -110,10 +110,12 @@ function placeBoxes() {
 							let t=e.target;
 							t.style.cssText=cbCSS+(t.checked ? cbCSS_c : cbCSS_u );
 							let ck=lkboxes.bx.filter((b)=>{return b.checked;});
-							console.group('Linkboxes: ');
-								console.log(ck);
-								console.log(ck.map((b)=>{return b.title;}));
-							console.groupEnd();
+							if(ck.length>0){
+								console.group('Linkboxes: ');
+									console.log(ck);
+									console.log(ck.map((b)=>{return b.title;}));
+								console.groupEnd();
+							}
 						};
 						chkb.onpointerenter=(e)=>{
 							//e.preventDefault();
