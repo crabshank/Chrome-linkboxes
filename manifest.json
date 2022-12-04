@@ -11,7 +11,6 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": ["tabs"],
   "action": {
     "default_icon": "linkbox.png",
     "default_title": "Linkboxes"

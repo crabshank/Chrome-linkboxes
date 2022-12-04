@@ -1,7 +1,16 @@
-var lkboxes={boxes:{bx:[],lk:[]}};
+var lkboxes={bx:[]};
 var cbCSS="margin-left: 0.17em !important;margin-right: 0.17em !important;outline-color: black !important;outline-width: 1px !important;outline-style: inset !important;outline-offset: -1px !important;";
 var cbCSS_u="box-shadow: #167ac6 0em 0em 8px 2px !important;";
 var cbCSS_c="box-shadow: #9043cc 0em 0em 8px 2px !important;";
+
+function elRemover(el){
+	if(typeof el!=='undefined' && !!el){
+	if(typeof el.parentNode!=='undefined' && !!el.parentNode){
+		el.parentNode.removeChild(el);
+	}
+	}
+}
+
 function keepMatchesShadow(els,slc,isNodeName){
    if(slc===false){
       return els;
@@ -70,19 +79,17 @@ function placeBoxes() {
 	for(let i=0, len=lks.length; i<len; i++){
 			let cl=lks[i];
 			let fnd=false;
-			for(let k=0, len_k=lkboxes.boxes.lk.length; k<len_k; k++){
-				let ck=lkboxes.boxes.lk[k];
-					if(cl===ck){
-						if(lkboxes.boxes.bx[k]!==null && typeof lkboxes.boxes.bx[k].parentElement !== 'undefined'){
+			for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
+				let ck=lkboxes.bx[k];
+					if(cl===ck.parentLink){
 							fnd=true;
-						}else{
-							lkboxes.boxes.lk=removeIndex(k,lkboxes.boxes.lk);
-							lkboxes.boxes.bx=removeIndex(k,lkboxes.boxes.bx);
-						}
-						k=len_k-1;
+							k=len_k-1;
 				}
 		}
-		if(!fnd){				
+		
+		
+		if(!fnd){
+
 						//Add box
 						let ctn=document.createElement('SECTION');
 						ctn.style.cssText="display: flex !important;align-items: flex-end !important;float: right !important;";
@@ -91,18 +98,18 @@ function placeBoxes() {
 						chkb.type="checkbox";
 						chkb.title=cl.href;
 						chkb.parentLink=cl;
+						chkb.parentSct=ctn;
 						let lkStyle=window.getComputedStyle(cl);
 						chkb.og_textDecoration=lkStyle['text-decoration'];
 						ctn.appendChild(chkb);
 						cl.appendChild(ctn);
-						lkboxes.boxes.lk.push(cl);
-						lkboxes.boxes.bx.push(chkb);
+						lkboxes.bx.push(chkb);
 						chkb.onclick=(e)=>{
 							//e.preventDefault();
 							e.stopPropagation();
 							let t=e.target;
 							t.style.cssText=cbCSS+(t.checked ? cbCSS_c : cbCSS_u );
-							let ck=lkboxes.boxes.bx.filter((b)=>{return b.checked;});
+							let ck=lkboxes.bx.filter((b)=>{return b.checked;});
 							console.group('Linkboxes: ');
 								console.log(ck);
 								console.log(ck.map((b)=>{return b.title;}));
@@ -122,9 +129,37 @@ function placeBoxes() {
 							t.parentLink.style.setProperty('text-decoration',t.og_textDecoration,'important')
 							t.style.cssText=cbCSS;
 						};
+								let inp=[...cl.getElementsByTagName('INPUT')].filter( (c) => {return c.type==='checkbox'});
+		for(let j=0, len_j=inp.length; j<len_j; j++){
+			let pj=inp[j];
+			pj.dispatchEvent(new Event('pointerleave'));
+			let ist=pj.style.cssText;
+			pj.dispatchEvent(new Event('pointerenter'));
+			if(pj.style.cssText===ist){
+				let s=pj.parentSct;
+				elRemover(pj);
+				if(!!s && typeof s!=='undefined'){
+					elRemover(s);
+				}
+			}else{
+				pj.dispatchEvent(new Event('pointerleave'));
+			}
+		}
 						//Added box
 		}
 	}
+	let nwb=[];
+	for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
+		let ck=lkboxes.bx[k];
+		for(let i=0, len_i=lks.length; i<len_i; i++){
+					let cl=lks[i];
+					if(cl===ck.parentLink){
+							nwb.push(lkboxes.bx[k]);
+							i=len_i-1;
+					}
+		}
+	}
+	lkboxes.bx=nwb;
 }
 
 if(typeof observer ==="undefined" && typeof timer ==="undefined"){
