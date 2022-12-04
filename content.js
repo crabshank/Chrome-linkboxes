@@ -1,7 +1,7 @@
 var lkboxes={bx:[]};
 var cbCSS="margin-left: 0.17em !important;margin-right: 0.17em !important;outline-color: black !important;outline-width: 1px !important;outline-style: inset !important;outline-offset: -1px !important;";
-var cbCSS_u="box-shadow: #167ac6 0em 0em 8px 2px !important;";
-var cbCSS_c="box-shadow: #9043cc 0em 0em 8px 2px !important;";
+var cbCSS_u="box-shadow: #167ac6 0em 0em 5px 2px !important;";
+var cbCSS_c="box-shadow: #9043cc 0em 0em 5px 2px !important;";
 
 function elRemover(el){
 	if(typeof el!=='undefined' && !!el){
@@ -10,7 +10,51 @@ function elRemover(el){
 	}
 	}
 }
+function remove_chk(b){
+	let s=b.parentSct;
+	elRemover(b);
+	if(!!s && typeof s!=='undefined'){
+		elRemover(s);
+	}
+}
 
+function passthroughBox(pj,cl){
+			pj.dispatchEvent(new Event('pointerleave'));
+			
+			cl.onpointerenter=(e)=>{
+				if(	
+						( e.offsetX>=pj.offsetLeft && e.offsetX<=pj.offsetLeft+pj.offsetWidth &&
+						e.offsetY>=pj.offsetTop && e.offsetY<=pj.offsetTop+pj.offsetHeight ) ||
+							(e.target === pj || e.target === pj.parentSct)
+					){
+						pj.dispatchEvent(new Event('pointerenter'));
+					}
+			}		
+			cl.onpointermove=(e)=>{
+				if(	
+						( e.offsetX>=pj.offsetLeft && e.offsetX<=pj.offsetLeft+pj.offsetWidth &&
+						e.offsetY>=pj.offsetTop && e.offsetY<=pj.offsetTop+pj.offsetHeight ) ||
+							(e.target === pj || e.target === pj.parentSct)
+					){
+						pj.dispatchEvent(new Event('pointerenter'));
+					}else{
+						pj.dispatchEvent(new Event('pointerleave'));
+					}
+			}
+			cl.onpointerleave=(e)=>{
+						pj.dispatchEvent(new Event('pointerleave'));
+			}
+			cl.onclick=(e)=>{
+				if(	
+						e.offsetX>=pj.offsetLeft && e.offsetX<=pj.offsetLeft+pj.offsetWidth &&
+						e.offsetY>=pj.offsetTop && e.offsetY<=pj.offsetTop+pj.offsetHeight
+					){
+						e.preventDefault();
+						e.stopPropagation();
+						pj.checked=!pj.checked;
+					}
+			}
+}
 function keepMatchesShadow(els,slc,isNodeName){
    if(slc===false){
       return els;
@@ -131,20 +175,22 @@ function placeBoxes() {
 							t.parentLink.style.setProperty('text-decoration',t.og_textDecoration,'important')
 							t.style.cssText=cbCSS;
 						};
+						
 						let inp=[...cl.getElementsByTagName('INPUT')].filter( (c) => {return c.type==='checkbox'});
 						for(let j=0, len_j=inp.length; j<len_j; j++){
 							let pj=inp[j];
-							pj.dispatchEvent(new Event('pointerleave'));
-							let ist=pj.style.cssText;
-							pj.dispatchEvent(new Event('pointerenter'));
-							if(pj.style.cssText===ist){
-								let s=pj.parentSct;
-								elRemover(pj);
-								if(!!s && typeof s!=='undefined'){
-									elRemover(s);
-								}
+							let chp=(!!pj.parentLink && typeof pj.parentLink !=='undefined' && !!pj.parentSct && typeof pj.parentSct !=='undefined')?true:false;
+							if(!chp){
+								remove_chk(pj);
 							}else{
 								pj.dispatchEvent(new Event('pointerleave'));
+								let ist=pj.style.cssText;
+								pj.dispatchEvent(new Event('pointerenter'));
+								if(pj.style.cssText===ist){
+									remove_chk(pj);
+								}else{
+									passthroughBox(pj,cl);
+								}
 							}
 						}
 						//Added box
