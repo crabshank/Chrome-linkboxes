@@ -1,6 +1,6 @@
 var firstDone=false;
 var lkboxes={bx:[]};
-var logCSS="font-weight:bolder; font-size:2ch;";
+var logCSS="font-weight:bolder; font-size:2.5ch;";
 var fs={
 				checkAll: (n)=>{
 					for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
@@ -15,17 +15,13 @@ var fs={
 						if(bk.parentLink.matches(c)){
 							if(!bk.checked){
 								bk.checked=true;
-								cm.push(bk);							
+								cm.push([bk.parentLink,bk.parentLink.href,bk]);
 							}
 						}
 					}
 					if(cm.length>0){
-					let lk=cm.map((l)=>{return l.parentLink;});
-					let lkh=lk.map((l)=>{return l.href;});
 					console.log('%cLinkboxes - Boxes for links with matching CSS that were unchecked and now checked (%s):',logCSS ,window.location.href);
 					console.log(cm);
-					console.log(lk);
-					console.log(lkh);
 					}
 				},
 				uncheckCSS: (c)=>{
@@ -35,17 +31,13 @@ var fs={
 						if(bk.parentLink.matches(c)){
 							if(bk.checked){
 								bk.checked=false;
-								ucm.push(bk);
+								ucm.push([bk.parentLink,bk.parentLink.href,bk]);
 							}
 						}
 					}
 					if(ucm.length>0){
-					let lk=ucm.map((l)=>{return l.parentLink;});
-					let lkh=lk.map((l)=>{return l.href;});
 					console.log('%cLinkboxes - Boxes for links with matching CSS that were checked and now unchecked (%s):', logCSS ,window.location.href);
 					console.log(ucm);
-					console.log(lk);
-					console.log(lkh);
 					}
 				},
 				logChecked: (n)=>{
@@ -70,8 +62,9 @@ var fs={
 function start_up(){
 try{
 var cbCSS="margin-left: 0.17em !important;margin-right: 0.17em !important;outline-color: black !important;outline-width: 1px !important;outline-style: inset !important;outline-offset: -1px !important;";
-var cbCSS_u="box-shadow: #167ac6 0em 0em 5px 2px !important;";
-var cbCSS_c="box-shadow: #9043cc 0em 0em 5px 2px !important;";
+var cbCSS_u="#167ac6 0em 0em 5px 2px";
+var cbCSS_c="#9043cc 0em 0em 5px 2px";
+var cbCSS_fixes=['box-shadow: ',' !important;'];
 
 function elRemover(el){
 	if(typeof el!=='undefined' && !!el){
@@ -220,6 +213,7 @@ function placeBoxes() {
 						chkb.og_textDecoration['text-decoration-style']= lkStyle['text-decoration-style'];
 						chkb.og_textDecoration['text-decoration-thickness']= lkStyle['text-decoration-thickness'];
 						chkb.og_textDecoration['text-decoration-color']= lkStyle['text-decoration-color'];
+						chkb.og_textDecoration['box-shadow']= lkStyle['box-shadow'];
 						ctn.appendChild(chkb);
 						cl.appendChild(ctn);
 						lkboxes.bx.push(chkb);
@@ -227,7 +221,9 @@ function placeBoxes() {
 							//e.preventDefault();
 							e.stopPropagation();
 							let t=e.target;
-							t.style.cssText=cbCSS+(t.checked ? cbCSS_c : cbCSS_u );
+							t.parentLink.style.setProperty('text-decoration-color',(t.checked ?'#9043cc':'#167ac6'),'important');
+							t.style.cssText=cbCSS+cbCSS_fixes[0]+(t.checked ? cbCSS_c : cbCSS_u )+cbCSS_fixes[1];
+							t.parentLink.style.setProperty('box-shadow',(t.checked ? cbCSS_c : cbCSS_u ),'important');
 						};
 						chkb.onpointerenter=(e)=>{
 							//e.preventDefault();
@@ -236,8 +232,9 @@ function placeBoxes() {
 							t.parentLink.style.setProperty('text-decoration-line','underline','important');
 							t.parentLink.style.setProperty('text-decoration-style','solid','important');
 							t.parentLink.style.setProperty('text-decoration-thickness','2px','important');
-							t.parentLink.style.setProperty('text-decoration-color','#167ac6','important');
-							t.style.cssText=cbCSS+(t.checked ? cbCSS_c : cbCSS_u );
+							t.parentLink.style.setProperty('text-decoration-color',(t.checked ?'#9043cc':'#167ac6'),'important');
+							t.style.cssText=cbCSS+cbCSS_fixes[0]+(t.checked ? cbCSS_c : cbCSS_u )+cbCSS_fixes[1];
+							t.parentLink.style.setProperty('box-shadow',(t.checked ? cbCSS_c : cbCSS_u ),'important');
 						};
 						chkb.onpointerleave=(e)=>{
 							//e.preventDefault();
@@ -247,6 +244,7 @@ function placeBoxes() {
 							t.parentLink.style.setProperty('text-decoration-style',chkb.og_textDecoration['text-decoration-style']);
 							t.parentLink.style.setProperty('text-decoration-thickness',chkb.og_textDecoration['text-decoration-thickness']);
 							t.parentLink.style.setProperty('text-decoration-color',chkb.og_textDecoration['text-decoration-color']);
+							t.parentLink.style.setProperty('box-shadow',chkb.og_textDecoration['box-shadow']);
 							t.style.cssText=cbCSS;
 						};
 						
