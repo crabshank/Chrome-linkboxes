@@ -8,9 +8,24 @@
 	<style>
 	button{
 	background-color: buttonface;
+	min-width: -webkit-fill-available;
+	}#txta{
+	min-width: -webkit-fill-available;
 	}
 	</style>
-	  <div >Adding checkboxes…</div>
+	  <button id="checkAll">Checked all</button>
+	  <button id="uncheckAll">Uncheck all</button>
+	  <button id="logChecked">Console log all checked</button>
+	  <button id="logUnchecked">Console log all unchecked</button>
+	  <button id="logAll">Console log all checkboxes</button>
+	<textarea id="txta" placeholder="Enter CSS selector here: " style="
+		display: flex;
+		min-height: min-content;
+		flex-direction: column-reverse;
+		margin-top:0.87em;
+	"></textarea>
+	<button id="checkCSS">Check all links matching this CSS ('a…')</button>
+	<button id="uncheckCSS">Uncheck all links matching this CSS ('a…')</button>
 	<script src="index.js"></script>
   </body>
 </html>

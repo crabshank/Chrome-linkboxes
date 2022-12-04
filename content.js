@@ -1,7 +1,74 @@
 var firstDone=false;
+var lkboxes={bx:[]};
+var logCSS="font-weight:bolder; font-size:2ch;";
+var fs={
+				checkAll: (n)=>{
+					for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
+						let bk=lkboxes.bx[k];
+						bk.checked=true;
+					}
+				},
+				checkCSS: (c)=>{
+					let cm=[];
+					for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
+						let bk=lkboxes.bx[k];
+						if(bk.parentLink.matches(c)){
+							if(!bk.checked){
+								bk.checked=true;
+								cm.push(bk);							
+							}
+						}
+					}
+					if(cm.length>0){
+					let lk=cm.map((l)=>{return l.parentLink;});
+					let lkh=lk.map((l)=>{return l.href;});
+					console.log('%cLinkboxes - Boxes for links with matching CSS that were unchecked and now checked (%s):',logCSS ,window.location.href);
+					console.log(cm);
+					console.log(lk);
+					console.log(lkh);
+					}
+				},
+				uncheckCSS: (c)=>{
+					let ucm=[];
+					for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
+						let bk=lkboxes.bx[k];
+						if(bk.parentLink.matches(c)){
+							if(bk.checked){
+								bk.checked=false;
+								ucm.push(bk);
+							}
+						}
+					}
+					if(ucm.length>0){
+					let lk=ucm.map((l)=>{return l.parentLink;});
+					let lkh=lk.map((l)=>{return l.href;});
+					console.log('%cLinkboxes - Boxes for links with matching CSS that were checked and now unchecked (%s):', logCSS ,window.location.href);
+					console.log(ucm);
+					console.log(lk);
+					console.log(lkh);
+					}
+				},
+				logChecked: (n)=>{
+					console.log('%cLinkboxes - All checked boxes (%s):', logCSS ,window.location.href);
+				},
+				logUnchecked: (n)=>{
+					console.log('%cLinkboxes - All unchecked boxes (%s):', logCSS ,window.location.href);
+					console.log(lkboxes.bx.filter((b)=>{return !b.checked;}));
+				},
+				logAll: (n)=>{
+					console.log('%cLinkboxes - All boxes (%s):', logCSS ,window.location.href);
+					console.log(lkboxes.bx);
+				},
+				uncheckAll:  (n)=>{
+					for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
+						let bk=lkboxes.bx[k];
+						bk.checked=false;
+					}
+				}
+}
+
 function start_up(){
 try{
-var lkboxes={bx:[]};
 var cbCSS="margin-left: 0.17em !important;margin-right: 0.17em !important;outline-color: black !important;outline-width: 1px !important;outline-style: inset !important;outline-offset: -1px !important;";
 var cbCSS_u="box-shadow: #167ac6 0em 0em 5px 2px !important;";
 var cbCSS_c="box-shadow: #9043cc 0em 0em 5px 2px !important;";
@@ -130,6 +197,7 @@ function placeBoxes() {
 				let ck=lkboxes.bx[k];
 					if(cl===ck.parentLink){
 							fnd=true;
+							ck.title=cl.href;
 							k=len_k-1;
 				}
 		}
@@ -147,7 +215,11 @@ function placeBoxes() {
 						chkb.parentLink=cl;
 						chkb.parentSct=ctn;
 						let lkStyle=window.getComputedStyle(cl);
-						chkb.og_textDecoration=lkStyle['text-decoration'];
+						chkb.og_textDecoration={};
+						chkb.og_textDecoration['text-decoration-line']= lkStyle['text-decoration-line'];
+						chkb.og_textDecoration['text-decoration-style']= lkStyle['text-decoration-style'];
+						chkb.og_textDecoration['text-decoration-thickness']= lkStyle['text-decoration-thickness'];
+						chkb.og_textDecoration['text-decoration-color']= lkStyle['text-decoration-color'];
 						ctn.appendChild(chkb);
 						cl.appendChild(ctn);
 						lkboxes.bx.push(chkb);
@@ -156,26 +228,25 @@ function placeBoxes() {
 							e.stopPropagation();
 							let t=e.target;
 							t.style.cssText=cbCSS+(t.checked ? cbCSS_c : cbCSS_u );
-							let ck=lkboxes.bx.filter((b)=>{return b.checked;});
-							if(ck.length>0){
-								console.group('Linkboxes: ');
-									console.log(ck);
-									console.log(ck.map((b)=>{return b.title;}));
-								console.groupEnd();
-							}
 						};
 						chkb.onpointerenter=(e)=>{
 							//e.preventDefault();
 							e.stopPropagation();
 							let t=e.target;
-							t.parentLink.style.setProperty('text-decoration','underline','important')
+							t.parentLink.style.setProperty('text-decoration-line','underline','important');
+							t.parentLink.style.setProperty('text-decoration-style','solid','important');
+							t.parentLink.style.setProperty('text-decoration-thickness','2px','important');
+							t.parentLink.style.setProperty('text-decoration-color','#167ac6','important');
 							t.style.cssText=cbCSS+(t.checked ? cbCSS_c : cbCSS_u );
 						};
 						chkb.onpointerleave=(e)=>{
 							//e.preventDefault();
 							e.stopPropagation();
 							let t=e.target;
-							t.parentLink.style.setProperty('text-decoration',t.og_textDecoration,'important')
+							t.parentLink.style.setProperty('text-decoration-line',chkb.og_textDecoration['text-decoration-line']);
+							t.parentLink.style.setProperty('text-decoration-style',chkb.og_textDecoration['text-decoration-style']);
+							t.parentLink.style.setProperty('text-decoration-thickness',chkb.og_textDecoration['text-decoration-thickness']);
+							t.parentLink.style.setProperty('text-decoration-color',chkb.og_textDecoration['text-decoration-color']);
 							t.style.cssText=cbCSS;
 						};
 						
@@ -257,6 +328,8 @@ function gotMessage(message, sender, sendResponse) {
         if(m==="Scan!" && !firstDone){
 			firstDone=true;
             start_up();
+		}else if(m!=="Scan!" && firstDone){
+			fs[m[0]](m[1]);
 		}
 }
 
