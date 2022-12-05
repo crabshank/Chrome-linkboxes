@@ -215,6 +215,7 @@ function placeBoxes() {
 		if(!fnd){
 
 						//Add box
+						cl.style.setProperty('pointer-events','auto','important');
 						let ctn=document.createElement('SECTION');
 						ctn.style.cssText="display: flex !important;align-items: flex-end !important;float: right !important;";
 						let chkb=document.createElement('INPUT');
@@ -232,6 +233,8 @@ function placeBoxes() {
 						chkb.og_textDecoration['box-shadow']= lkStyle['box-shadow'];
 						ctn.appendChild(chkb);
 						cl.appendChild(ctn);
+						chkb.style.setProperty('pointer-events','auto','important');
+						ctn.style.setProperty('pointer-events','auto','important');
 						lkboxes.bx.push(chkb);
 						chkb.onclick=(e)=>{
 							//e.preventDefault();
