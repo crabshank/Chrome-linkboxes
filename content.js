@@ -1,7 +1,22 @@
 var firstDone=false;
 var lkboxes={bx:[]};
 var logCSS="font-weight:bolder; font-size:2.5ch;";
+
+function sendToPopup(type,data,args){
+	chrome.runtime.sendMessage({
+					type: type,
+                    data: data,
+					args: args
+                }, function (response) {;});
+}
+
 var fs={
+				openAll: (n)=>{
+					 sendToPopup('open',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),false);
+				},
+				openAllHib: (n)=>{
+					sendToPopup('open',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),true);
+				},
 				checkAll: (n)=>{
 					for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
 						let bk=lkboxes.bx[k];
@@ -15,7 +30,7 @@ var fs={
 						if(bk.parentLink.matches(c)){
 							if(!bk.checked){
 								bk.checked=true;
-								cm.push([bk.parentLink,bk.parentLink.href,bk]);
+								cm.push({link: bk.parentLink, href: bk.parentLink.href, box: bk});
 							}
 						}
 					}
@@ -31,7 +46,7 @@ var fs={
 						if(bk.parentLink.matches(c)){
 							if(bk.checked){
 								bk.checked=false;
-								ucm.push([bk.parentLink,bk.parentLink.href,bk]);
+								ucm.push({link: bk.parentLink, href: bk.parentLink.href, box: bk});
 							}
 						}
 					}
@@ -42,6 +57,7 @@ var fs={
 				},
 				logChecked: (n)=>{
 					console.log('%cLinkboxes - All checked boxes (%s):', logCSS ,window.location.href);
+					console.log(lkboxes.bx.filter((b)=>{return b.checked;}));
 				},
 				logUnchecked: (n)=>{
 					console.log('%cLinkboxes - All unchecked boxes (%s):', logCSS ,window.location.href);
