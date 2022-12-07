@@ -5,8 +5,6 @@ ccb.txt_area=txtar;
 ccbu.txt_area=txtar;
 var tbs=[];
 
-
-
 async function opn(chkd,disc) {
 					return new Promise(function(resolve) {
 						if(chkd.length>0){
