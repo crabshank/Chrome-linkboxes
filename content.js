@@ -77,7 +77,7 @@ var fs={
 
 function start_up(){
 try{
-var cbCSS="margin-left: 0.17em !important;margin-right: 0.17em !important;outline-color: black !important;outline-width: 1px !important;outline-style: inset !important;outline-offset: -1px !important;";
+var cbCSS="margin-left: 0.17em !important;margin-right: 0.17em !important;outline-color: black !important;outline-width: 1px !important;outline-style: inset !important;outline-offset: -1px !important; pointer-events: auto !important; min-height: 15px !important; min-width: 15px !important;";
 var cbCSS_u="#167ac6 0em 0em 5px 2px";
 var cbCSS_c="#9043cc 0em 0em 5px 2px";
 var cbCSS_fixes=['box-shadow: ',' !important;'];
@@ -233,7 +233,6 @@ function placeBoxes() {
 						chkb.og_textDecoration['box-shadow']= lkStyle['box-shadow'];
 						ctn.appendChild(chkb);
 						cl.appendChild(ctn);
-						chkb.style.setProperty('pointer-events','auto','important');
 						ctn.style.setProperty('pointer-events','auto','important');
 						lkboxes.bx.push(chkb);
 						chkb.onclick=(e)=>{
