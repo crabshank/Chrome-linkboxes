@@ -45,21 +45,14 @@ async function tabs_discard(d){
 	});
 }
 
-
-async function replaceTabs(r,a){
-	return new Promise(function(resolve) {
-		for(let i=tbs.length-1; i>=0; i--){
-			let tb=tbs[i];
-			if(tb.id===r){
-				tb.id=a;
-			}
-		}
-		resolve();
-	});
+function replaceTabs(r,a){
+	let ix=tbs.findIndex((t)=>{return t.id===r;}); if(ix>=0){
+		tbs[ix].id=a;
+	}
 }
 
 chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-	fq_loop( async ()=>{ await replaceTabs(removedTabId,addedTabId); });
+	replaceTabs(removedTabId,addedTabId);
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
