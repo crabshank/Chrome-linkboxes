@@ -1,6 +1,7 @@
 var firstDone=false;
 var lkboxes={bx:[]};
 var logCSS="font-weight:bolder; font-size:2.5ch;";
+var chg=window.location.href;
 
 function sendToPopup(type,data,args){
 	chrome.runtime.sendMessage({
@@ -197,6 +198,11 @@ function removeIndex(d, arr){
 }
 
 function placeBoxes() {
+	if(firstDone && window.location.href!==chg){
+		window.location.reload(true);
+		window.location.href===chg;
+		return;
+	}
 	let lks=getMatchingNodesShadow(document, 'A',true,false);
 
 	for(let i=0, len=lks.length; i<len; i++){
@@ -305,6 +311,7 @@ if(typeof observer ==="undefined" && typeof timer ==="undefined"){
 	var timer_tm=null;
 const observer = new MutationObserver((mutations) =>
 {
+
 	if(timer){
 		clearTimeout(timer);
 		if(performance.now()-timer_tm>=200){
