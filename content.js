@@ -31,7 +31,7 @@ var fs={
 						if(bk.parentLink.matches(c)){
 							if(!bk.checked){
 								bk.checked=true;
-								cm.push({link: bk.parentLink, href: bk.parentLink.href, box: bk});
+								cm.push([bk.parentLink,bk.parentLink.href,bk]);
 							}
 						}
 					}
@@ -47,7 +47,7 @@ var fs={
 						if(bk.parentLink.matches(c)){
 							if(bk.checked){
 								bk.checked=false;
-								ucm.push({link: bk.parentLink, href: bk.parentLink.href, box: bk});
+								ucm.push([bk.parentLink,bk.parentLink.href,bk]);
 							}
 						}
 					}
