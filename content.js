@@ -238,7 +238,7 @@ function placeBoxes() {
 						chkb.og_textDecoration['text-decoration-color']= lkStyle['text-decoration-color'];
 						chkb.og_textDecoration['box-shadow']= lkStyle['box-shadow'];
 						ctn.appendChild(chkb);
-						cl.appendChild(ctn);
+						cl.insertAdjacentElement('afterbegin',ctn);
 						ctn.style.setProperty('pointer-events','auto','important');
 						lkboxes.bx.push(chkb);
 						chkb.onclick=(e)=>{
