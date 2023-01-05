@@ -208,90 +208,93 @@ function placeBoxes() {
 	let lks=getMatchingNodesShadow(document, 'A',true,false);
 
 	for(let i=0, len=lks.length; i<len; i++){
-			let cl=lks[i];
-			let fnd=false;
-			for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
-				let ck=lkboxes.bx[k];
-					if(cl===ck.parentLink){
-							fnd=true;
-							ck.title=cl.href;
-							k=len_k-1;
-				}
-		}
-		
-		
-		if(!fnd){
+		let cl=lks[i];
+		let clh=cl.href;
+		if(clh!==null && clh.trim()!==''){	
+				let fnd=false;
+				for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
+					let ck=lkboxes.bx[k];
+						if(cl===ck.parentLink){
+								fnd=true;
+								ck.title=clh;
+								k=len_k-1;
+					}
+			}
+			
+			
+			if(!fnd){
 
-						//Add box
-						cl.style.setProperty('pointer-events','auto','important');
-						let ctn=document.createElement('SECTION');
-						ctn.style.cssText="display: flex !important;align-items: flex-end !important;float: right !important;";
-						let chkb=document.createElement('INPUT');
-						chkb.style.cssText=cbCSS;
-						chkb.type="checkbox";
-						chkb.title=cl.href;
-						chkb.parentLink=cl;
-						chkb.parentSct=ctn;
-						let lkStyle=window.getComputedStyle(cl);
-						chkb.og_textDecoration={};
-						chkb.og_textDecoration['text-decoration-line']= lkStyle['text-decoration-line'];
-						chkb.og_textDecoration['text-decoration-style']= lkStyle['text-decoration-style'];
-						chkb.og_textDecoration['text-decoration-thickness']= lkStyle['text-decoration-thickness'];
-						chkb.og_textDecoration['text-decoration-color']= lkStyle['text-decoration-color'];
-						chkb.og_textDecoration['box-shadow']= lkStyle['box-shadow'];
-						ctn.appendChild(chkb);
-						cl.insertAdjacentElement('afterbegin',ctn);
-						ctn.style.setProperty('pointer-events','auto','important');
-						lkboxes.bx.push(chkb);
-						chkb.onclick=(e)=>{
-							//e.preventDefault();
-							e.stopPropagation();
-							let t=e.target;
-							t.parentLink.style.setProperty('text-decoration-color',(t.checked ?'#9043cc':'#167ac6'),'important');
-							t.style.cssText=cbCSS+cbCSS_fixes[0]+(t.checked ? cbCSS_c : cbCSS_u )+cbCSS_fixes[1];
-							t.parentLink.style.setProperty('box-shadow',(t.checked ? cbCSS_c : cbCSS_u ),'important');
-						};
-						chkb.onpointerenter=(e)=>{
-							//e.preventDefault();
-							e.stopPropagation();
-							let t=e.target;
-							t.parentLink.style.setProperty('text-decoration-line','underline','important');
-							t.parentLink.style.setProperty('text-decoration-style','solid','important');
-							t.parentLink.style.setProperty('text-decoration-thickness','2px','important');
-							t.parentLink.style.setProperty('text-decoration-color',(t.checked ?'#9043cc':'#167ac6'),'important');
-							t.style.cssText=cbCSS+cbCSS_fixes[0]+(t.checked ? cbCSS_c : cbCSS_u )+cbCSS_fixes[1];
-							t.parentLink.style.setProperty('box-shadow',(t.checked ? cbCSS_c : cbCSS_u ),'important');
-						};
-						chkb.onpointerleave=(e)=>{
-							//e.preventDefault();
-							e.stopPropagation();
-							let t=e.target;
-							t.parentLink.style.setProperty('text-decoration-line',chkb.og_textDecoration['text-decoration-line']);
-							t.parentLink.style.setProperty('text-decoration-style',chkb.og_textDecoration['text-decoration-style']);
-							t.parentLink.style.setProperty('text-decoration-thickness',chkb.og_textDecoration['text-decoration-thickness']);
-							t.parentLink.style.setProperty('text-decoration-color',chkb.og_textDecoration['text-decoration-color']);
-							t.parentLink.style.setProperty('box-shadow',chkb.og_textDecoration['box-shadow']);
-							t.style.cssText=cbCSS;
-						};
-						
-						let inp=[...cl.getElementsByTagName('INPUT')].filter( (c) => {return c.type==='checkbox'});
-						for(let j=0, len_j=inp.length; j<len_j; j++){
-							let pj=inp[j];
-							let chp=(!!pj.parentLink && typeof pj.parentLink !=='undefined' && !!pj.parentSct && typeof pj.parentSct !=='undefined')?true:false;
-							if(!chp){
-								remove_chk(pj);
-							}else{
-								pj.dispatchEvent(new Event('pointerleave'));
-								let ist=pj.style.cssText;
-								pj.dispatchEvent(new Event('pointerenter'));
-								if(pj.style.cssText===ist){
+							//Add box
+							cl.style.setProperty('pointer-events','auto','important');
+							let ctn=document.createElement('SECTION');
+							ctn.style.cssText="display: flex !important;align-items: flex-end !important;float: right !important;";
+							let chkb=document.createElement('INPUT');
+							chkb.style.cssText=cbCSS;
+							chkb.type="checkbox";
+							chkb.title=clh;
+							chkb.parentLink=cl;
+							chkb.parentSct=ctn;
+							let lkStyle=window.getComputedStyle(cl);
+							chkb.og_textDecoration={};
+							chkb.og_textDecoration['text-decoration-line']= lkStyle['text-decoration-line'];
+							chkb.og_textDecoration['text-decoration-style']= lkStyle['text-decoration-style'];
+							chkb.og_textDecoration['text-decoration-thickness']= lkStyle['text-decoration-thickness'];
+							chkb.og_textDecoration['text-decoration-color']= lkStyle['text-decoration-color'];
+							chkb.og_textDecoration['box-shadow']= lkStyle['box-shadow'];
+							ctn.appendChild(chkb);
+							cl.insertAdjacentElement('afterbegin',ctn);
+							ctn.style.setProperty('pointer-events','auto','important');
+							lkboxes.bx.push(chkb);
+							chkb.onclick=(e)=>{
+								//e.preventDefault();
+								e.stopPropagation();
+								let t=e.target;
+								t.parentLink.style.setProperty('text-decoration-color',(t.checked ?'#9043cc':'#167ac6'),'important');
+								t.style.cssText=cbCSS+cbCSS_fixes[0]+(t.checked ? cbCSS_c : cbCSS_u )+cbCSS_fixes[1];
+								t.parentLink.style.setProperty('box-shadow',(t.checked ? cbCSS_c : cbCSS_u ),'important');
+							};
+							chkb.onpointerenter=(e)=>{
+								//e.preventDefault();
+								e.stopPropagation();
+								let t=e.target;
+								t.parentLink.style.setProperty('text-decoration-line','underline','important');
+								t.parentLink.style.setProperty('text-decoration-style','solid','important');
+								t.parentLink.style.setProperty('text-decoration-thickness','2px','important');
+								t.parentLink.style.setProperty('text-decoration-color',(t.checked ?'#9043cc':'#167ac6'),'important');
+								t.style.cssText=cbCSS+cbCSS_fixes[0]+(t.checked ? cbCSS_c : cbCSS_u )+cbCSS_fixes[1];
+								t.parentLink.style.setProperty('box-shadow',(t.checked ? cbCSS_c : cbCSS_u ),'important');
+							};
+							chkb.onpointerleave=(e)=>{
+								//e.preventDefault();
+								e.stopPropagation();
+								let t=e.target;
+								t.parentLink.style.setProperty('text-decoration-line',chkb.og_textDecoration['text-decoration-line']);
+								t.parentLink.style.setProperty('text-decoration-style',chkb.og_textDecoration['text-decoration-style']);
+								t.parentLink.style.setProperty('text-decoration-thickness',chkb.og_textDecoration['text-decoration-thickness']);
+								t.parentLink.style.setProperty('text-decoration-color',chkb.og_textDecoration['text-decoration-color']);
+								t.parentLink.style.setProperty('box-shadow',chkb.og_textDecoration['box-shadow']);
+								t.style.cssText=cbCSS;
+							};
+							
+							let inp=[...cl.getElementsByTagName('INPUT')].filter( (c) => {return c.type==='checkbox'});
+							for(let j=0, len_j=inp.length; j<len_j; j++){
+								let pj=inp[j];
+								let chp=(!!pj.parentLink && typeof pj.parentLink !=='undefined' && !!pj.parentSct && typeof pj.parentSct !=='undefined')?true:false;
+								if(!chp){
 									remove_chk(pj);
 								}else{
-									passthroughBox(pj,cl);
+									pj.dispatchEvent(new Event('pointerleave'));
+									let ist=pj.style.cssText;
+									pj.dispatchEvent(new Event('pointerenter'));
+									if(pj.style.cssText===ist){
+										remove_chk(pj);
+									}else{
+										passthroughBox(pj,cl);
+									}
 								}
 							}
-						}
-						//Added box
+							//Added box
+			}
 		}
 	}
 	let nwb=[];
