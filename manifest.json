@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Linkboxes",
-  "version": "2023.1",
+  "version": "2023.4",
+  "options_page":  "options.html",
   "content_scripts": [
     {
 	      "all_frames": true,
@@ -13,7 +14,8 @@
   ],
   "permissions": [
 	"tabs",
-	"activeTab"
+	"activeTab",
+	"storage"
   ],
   "action": {
     "default_icon": "linkbox.png",

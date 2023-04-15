@@ -2,6 +2,114 @@ var firstDone=false;
 var lkboxes={bx:[]};
 var logCSS="font-weight:bolder; font-size:2.5ch;";
 var chg=window.location.href;
+var addrs=[];
+var slctrs=[];
+
+function removeEls(d, arr) {
+    return arr.filter((a)=>{return a!==d});
+}
+
+function findIndexTotalInsens(string, substring, index) {
+    string = string.toLocaleLowerCase();
+    substring = substring.toLocaleLowerCase();
+    for (let i = 0; i < string.length ; i++) {
+        if ((string.includes(substring, i)) && (!(string.includes(substring, i + 1)))) {
+            index.push(i);
+            break;
+        }
+    }
+    return index;
+}
+
+function blacklistMatch(arr, t) {
+    var found = false;
+	var blSite='';
+	var blSel='';
+    if (!((arr.length == 1 && arr[0] == "") || (arr.length == 0))) {
+        ts = t.toLocaleLowerCase();
+        for (var i = 0; i < arr.length; i++) {
+            let spl = arr[i].split('*');
+            spl = removeEls("", spl);
+
+            var spl_mt = [];
+            for (let k = 0; k < spl.length; k++) {
+                var spl_m = [];
+                findIndexTotalInsens(ts, spl[k], spl_m);
+
+                spl_mt.push(spl_m);
+
+
+            }
+
+            found = true;
+
+            if ((spl_mt.length == 1) && (typeof spl_mt[0][0] === "undefined")) {
+                found = false;
+            } else if (!((spl_mt.length == 1) && (typeof spl_mt[0][0] !== "undefined"))) {
+
+                for (let m = 0; m < spl_mt.length - 1; m++) {
+
+                    if ((typeof spl_mt[m][0] === "undefined") || (typeof spl_mt[m + 1][0] === "undefined")) {
+                        found = false;
+                        m = spl_mt.length - 2; //EARLY TERMINATE
+                    } else if (!(spl_mt[m + 1][0] > spl_mt[m][0])) {
+                        found = false;
+                    }
+                }
+
+            }
+            if(found){
+            		blSite = arr[i];
+					blSel = slctrs[i];
+					i = arr.length - 1;
+            }
+        }
+    }
+    //console.log(found);
+    return [found,blSite,blSel];
+
+}
+
+var isCurrentSiteBlacklisted = function(){
+	return blacklistMatch(addrs, window.location.href);
+}
+var isBl=[];
+async function start_up_storage(){
+	return new Promise(function(resolve) {
+		chrome.storage.local.get(null, function(items) {
+							let setObj={}
+							let setObjct=false;
+
+							if(!!items.slc_list && typeof  items.slc_list!=='undefined'){
+								slctrs=JSON.parse(items.slc_list);
+							}else{
+								setObj["slc_list"]='[]';
+								setObjct=true;
+							}
+							if(!!items.addrs_list && typeof  items.addrs_list!=='undefined'){
+								addrs=JSON.parse(items.addrs_list);
+							}else{
+								setObj["addrs_list"]='[]';
+								setObjct=true;
+							}
+								if(setObjct){
+									chrome.storage.local.set(setObj, function() {
+										chrome.storage.local.get(null, function(items) {
+													 isBl=isCurrentSiteBlacklisted();
+													resolve();
+										});
+									});
+								}else{
+									 isBl=isCurrentSiteBlacklisted();
+									resolve();
+								}
+		});
+	});
+}
+
+
+(async ()=>{ await start_up_storage();})();
+
 
 function sendToPopup(type,data,args){
 	chrome.runtime.sendMessage({
@@ -205,7 +313,13 @@ function placeBoxes() {
 		window.location.href===chg;
 		return;
 	}
-	let lks=getMatchingNodesShadow(document, 'A',true,false);
+	let nn=true
+	let slct='A';
+	if(isBl[0] && isBl[2]!==''){
+		slct=isBl[2];
+		nn=false;
+	}
+	let lks=getMatchingNodesShadow(document, slct,nn,false);
 
 	for(let i=0, len=lks.length; i<len; i++){
 		let cl=lks[i];
