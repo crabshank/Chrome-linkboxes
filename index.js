@@ -8,25 +8,25 @@ var tbs=[];
 async function opn(chkd,disc) {
 					return new Promise(function(resolve) {
 						if(chkd.length>0){
-									var count=0;
-									for(let i=0, len_i=chkd.length; i<len_i; i++){
+									var count=chkd.length;
+									for(let i=chkd.length-1; i>=0; i--){
 										let addr=chkd[i];
 										try{
 											chrome.tabs.create({
 												url: addr,
 												active: false		
 											}, function(tab){
-													count++;
+													count--;
 													if(disc){
 														tbs.push({id: tab.id});
 													}
-													if(count==chkd.length){
+													if(count===0){
 														resolve();
 													}
 											});
 										}catch(e){
-												count++;
-												if(count==chkd.length){
+												count--;
+												if(count===0){
 													resolve();
 												}
 										}
