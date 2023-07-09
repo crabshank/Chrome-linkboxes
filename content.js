@@ -242,6 +242,15 @@ function passthroughBox(pj,cl){
 						pj.checked=!pj.checked;
 					}
 			}
+			cl.onpointerdown=(e)=>{
+				if(	
+						e.offsetX>=pj.offsetLeft && e.offsetX<=pj.offsetLeft+pj.offsetWidth &&
+						e.offsetY>=pj.offsetTop && e.offsetY<=pj.offsetTop+pj.offsetHeight
+					){
+						e.preventDefault();
+						e.stopPropagation();
+					}
+			}
 }
 function keepMatchesShadow(els,slc,isNodeName){
    if(slc===false){
@@ -359,6 +368,10 @@ function placeBoxes() {
 							cl.insertAdjacentElement('afterbegin',ctn);
 							ctn.style.setProperty('pointer-events','auto','important');
 							lkboxes.bx.push(chkb);
+							chkb.onpointerdown=(e)=>{
+								e.preventDefault();
+								e.stopPropagation();
+							}
 							chkb.onclick=(e)=>{
 								//e.preventDefault();
 								e.stopPropagation();
