@@ -49,7 +49,7 @@ function checkNew(scs){
 function create_sct(){
 		let sc=document.createElement('section');
 		sc.className='site_sets';
-		sc.innerHTML='<textarea placeholder="URL (Use asterisks with slashes)" style="box-shadow: 0 0 0px 1px black; border-width: 0px; width: 40%;"></textarea><textarea placeholder="CSS selector (Do not use any quotation marks)" style="box-shadow: black 0px 0px 0px 1px;border-width: 0px;margin-left: 0.16%; width: 60%;"></textarea><label for="autoChk" style="text-wrap: nowrap; margin-left: 1ch; padding-top: 1ch;">Auto-check: <input type="checkbox" id="autoChk" style="transform: translate(-0.55ch,0.3ch);"></label><br><br>';
+		sc.innerHTML='<textarea placeholder="URL (Use asterisks with slashes)" style="box-shadow: 0 0 0px 1px black; border-width: 0px; width: 40%;"></textarea><textarea placeholder="CSS selector (Do not use any quotation marks)" style="box-shadow: black 0px 0px 0px 1px;border-width: 0px;margin-left: 0.16%; width: 60%;"></textarea><label for="autoChk" title="Auto-generate checkboxes" style="text-wrap: nowrap; margin-left: 1ch; padding-top: 1ch;">Auto-check: <input type="checkbox" id="autoChk" style="transform: translate(-0.55ch,0.3ch);"></label><br><br>';
 		let scc=[...sc.children];
 		scc[0].onfocus= function(event){
 				checkNew(event.target.parentElement);
