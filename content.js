@@ -26,6 +26,7 @@ function blacklistMatch(arr, t) {
     var found = false;
 	var blSite='';
 	var blSel='';
+    var acheck = false;
     if (!((arr.length == 1 && arr[0] == "") || (arr.length == 0))) {
         ts = t.toLocaleLowerCase();
         for (var i = 0; i < arr.length; i++) {
