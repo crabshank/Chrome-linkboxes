@@ -11,11 +11,17 @@ function setHeights(sc){
 let chk=function(sci,init){
 	let u=sci.children[0];
 	let f=sci.children[1];
+	let k=sci.children[2].firstElementChild;
 
 let sct2=[...document.querySelectorAll('SECTION.site_sets')];
-	if (((u.value!="" && f.value!="")&&(sct2.length==1))||((u.value!="" && f.value!="")&&(init!=1)&&(sct2.length>1))){
+	if (
+		((u.value!="" && (f.value!="" || k.checked===true))&&(sct2.length==1))
+		||((u.value!="" && (f.value!="" || k.checked===true))&&(init!=1)&&(sct2.length>1))
+	){
 		forceNewSct(sci);
-	}else if((u.value=="" && f.value=="")&&(sct2.length>1)&&(init!=2)){
+	}else if(
+		(u.value=="" && f.value=="")&&(sct2.length>1)&&(init!=2)
+	){
 		sci.remove();
 	}
 }
@@ -31,7 +37,8 @@ function checkNew(scs){
 				let sci=tst[i]
 				let u=sci.children[0];
 				let f=sci.children[1];
-				if ( u.value=="" && f.value=="" ){
+				let k=sci.children[2].firstElementChild;
+				if ( u.value=="" && (f.value=="" || k.checked===false) ){
 					force2=false;
 					break
 				}
@@ -70,7 +77,12 @@ function forceNewSct(sci){
 		sci.insertAdjacentElement('afterend', sc);
 		setHeights(sc);
 		sc.oninput= function(event){
-				checkNew(event.target.parentElement);
+				let t=event.target;
+				if(t.tagName==='INPUT' && t.type==='checkbox'){
+					checkNew(event.target.parentElement.parentElement);
+				}else{
+					checkNew(event.target.parentElement);
+				}
 		}
 		return sc;
 }
