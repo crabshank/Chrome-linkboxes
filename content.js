@@ -4,6 +4,7 @@ var logCSS="font-weight:bolder; font-size:2.5ch;";
 var chg=window.location.href;
 var addrs=[];
 var slctrs=[];
+var aChk=[];
 
 function removeEls(d, arr) {
     return arr.filter((a)=>{return a!==d});
@@ -61,12 +62,13 @@ function blacklistMatch(arr, t) {
             if(found){
             		blSite = arr[i];
 					blSel = slctrs[i];
+					acheck=aChk[i]
 					i = arr.length - 1;
             }
         }
     }
     //console.log(found);
-    return [found,blSite,blSel];
+    return [found,blSite,blSel,acheck];
 
 }
 
@@ -92,6 +94,12 @@ async function start_up_storage(){
 								setObj["addrs_list"]='[]';
 								setObjct=true;
 							}
+							if(!!items.auto_chk && typeof  items.auto_chk!=='undefined'){
+								aChk=JSON.parse(items.auto_chk);
+							}else{
+								setObj["auto_chk"]='[false]';
+								setObjct=true;
+							}
 								if(setObjct){
 									chrome.storage.local.set(setObj, function() {
 										chrome.storage.local.get(null, function(items) {
@@ -108,8 +116,13 @@ async function start_up_storage(){
 }
 
 
-(async ()=>{ await start_up_storage();})();
-
+(async ()=>{
+	await start_up_storage();
+	if(isBl[3]){
+		firstDone=true;
+		start_up();
+	}
+})();
 
 function sendToPopup(type,data,args){
 	chrome.runtime.sendMessage({
@@ -496,6 +509,8 @@ observer.observe(document, {
 placeBoxes();
 }catch(e){;}
 }
+
+
 
 function gotMessage(message, sender, sendResponse) {
     let m=message.message;
