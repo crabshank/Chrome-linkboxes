@@ -143,7 +143,7 @@ var saver =function(){
 	let slct = scts[k].children[1].value.trim();
 	let autoChk = scts[k].children[2].firstElementChild.checked;
 
-	if(lstChk!=='' && slct!==''){
+	if(lstChk!=='' && (slct!=='' || autoChk===true)){
 		if (lstChk.split('/').length != 1)
 		{
 
