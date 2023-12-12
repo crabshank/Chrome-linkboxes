@@ -158,8 +158,7 @@ var fs={
 						}
 					}
 					if(cm.length>0){
-					console.log('%cLinkboxes - Boxes for links with matching CSS that were unchecked and now checked (%s):',logCSS ,window.location.href);
-					console.log(cm);
+						console.log({Description:`Linkboxes - Boxes for links with matching CSS that were unchecked and now checked (${window.location.href})`,Matching: cm});
 					}
 				},
 				uncheckCSS: (c)=>{
@@ -174,21 +173,21 @@ var fs={
 						}
 					}
 					if(ucm.length>0){
-					console.log('%cLinkboxes - Boxes for links with matching CSS that were checked and now unchecked (%s):', logCSS ,window.location.href);
-					console.log(ucm);
+						console.log({Description:`Linkboxes - Boxes for links with matching CSS that were checked and now unchecked (${window.location.href})`,Matching: ucm});
 					}
 				},
 				logChecked: (n)=>{
-					console.log('%cLinkboxes - All checked boxes (%s):', logCSS ,window.location.href);
-					console.log(lkboxes.bx.filter((b)=>{return b.checked;}));
+					let chd=lkboxes.bx.filter((b)=>{return b.checked;});
+					let chd1=chd.map((b)=>{return b.parentLink.href;});
+					console.log({Description:`Linkboxes - All checked boxes (${window.location.href})`,hrefs: chd1.join('\n'),Checkboxes: chd});
 				},
 				logUnchecked: (n)=>{
-					console.log('%cLinkboxes - All unchecked boxes (%s):', logCSS ,window.location.href);
-					console.log(lkboxes.bx.filter((b)=>{return !b.checked;}));
+					let uchd=lkboxes.bx.filter((b)=>{return !b.checked;});
+					let uchd1=uchd.map((b)=>{return b.parentLink.href;});
+					console.log({Description: `Linkboxes - All unchecked boxes (${window.location.href})`,hrefs: uchd1.join('\n'),Checkboxes: uchd});
 				},
 				logAll: (n)=>{
-					console.log('%cLinkboxes - All boxes (%s):', logCSS ,window.location.href);
-					console.log(lkboxes.bx);
+					console.log({Description: `Linkboxes - All boxes (${window.location.href})`,hrefs: lkboxes.bx.map((b)=>{return b.parentLink.href;}).join('\n'),Checkboxes: lkboxes.bx});
 				},
 				uncheckAll:  (n)=>{
 					for(let k=0, len_k=lkboxes.bx.length; k<len_k; k++){
