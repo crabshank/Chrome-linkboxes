@@ -116,7 +116,6 @@ async function start_up_storage(){
 	});
 }
 
-
 (async ()=>{
 	await start_up_storage();
 	if(isBl[3]){
@@ -134,6 +133,32 @@ function sendToPopup(type,data,args){
 }
 
 var fs={
+				addHist: (n)=>{
+					sendToPopup('hist',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),false);
+				},
+				remHist: (n)=>{
+					sendToPopup('hist',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),true);
+				},
+				invertChecked: (n)=>{
+					let bx=lkboxes.bx;
+					let bx_checked=[];
+					let bx_unchecked=[];
+					for(let k=0, len_k=bx.length; k<len_k; k++){
+						let bk=bx[k];
+						if(bk.checked){
+							bx_checked.push(bk);
+						}else{
+							bx_unchecked.push(bk);
+						}
+					}
+					for(let k=0, len_k=bx_checked.length; k<len_k; k++){
+						bx_checked[k].checked=false;
+					}
+					for(let k=0, len_k=bx_unchecked.length; k<len_k; k++){
+						bx_unchecked[k].checked=true;
+					}
+					
+				},
 				openAll: (n)=>{
 					 sendToPopup('open',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),false);
 				},
@@ -509,8 +534,6 @@ observer.observe(document, {
 placeBoxes();
 }catch(e){;}
 }
-
-
 
 function gotMessage(message, sender, sendResponse) {
     let m=message.message;

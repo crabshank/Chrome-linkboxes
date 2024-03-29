@@ -37,6 +37,45 @@ async function opn(chkd,disc) {
 				});
 };
 
+async function hst(chkd,rem) {
+					return new Promise(function(resolve) {
+						if(chkd.length>0){
+									var count=chkd.length;
+									for(let i=chkd.length-1; i>=0; i--){
+										let addr=chkd[i];
+										try{
+											if(rem===true){
+												 chrome.history.deleteUrl({
+													url: addr
+												}, function() {
+														count--;
+														if(count===0){
+															resolve();
+														}
+												});
+											}else{
+												chrome.history.addUrl({
+													url: addr
+												}, function() {
+														count--;
+														if(count===0){
+															resolve();
+														}
+												});
+											}
+										}catch(e){
+												count--;
+												if(count===0){
+													resolve();
+												}
+										}
+									}
+						}else{
+							resolve();
+						}
+				});
+};
+
 async function tabs_discard(d){
 	return new Promise(function(resolve) {
 				chrome.tabs.discard(d, function(tab){
@@ -103,6 +142,8 @@ function send(message) {
  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if(message.type==="open"){
 		(async ()=>{ await opn(message.data,message.args); })();
+	}else if(message.type==="hist"){
+		(async ()=>{ await hst(message.data,message.args); })();
 	}
 });
  
