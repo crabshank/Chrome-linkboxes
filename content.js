@@ -10,6 +10,14 @@ function removeEls(d, arr) {
     return arr.filter((a)=>{return a!==d});
 }
 
+function openInNewTab(u) {
+  Object.assign(document.createElement('a'), {
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    href: u,
+  }).click();
+}
+
 function findIndexTotalInsens(string, substring, index) {
     string = string.toLocaleLowerCase();
     substring = substring.toLocaleLowerCase();
@@ -160,8 +168,12 @@ var fs={
 					
 				},
 				openAll: (n)=>{
-					 sendToPopup('open',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),false);
-				},
+					 //sendToPopup('open',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),false);
+                    let chked=lkboxes.bx.filter((b)=>{return b.checked;});
+                    for(let k=0, len_k=chked.length; k<len_k; k++){
+                        openInNewTab(chked[k].parentLink.href);
+                    }
+                },
 				openAllHib: (n)=>{
 					sendToPopup('open',lkboxes.bx.filter((b)=>{return b.checked;}).map((b)=>{return b.parentLink.href;}),true);
 				},
